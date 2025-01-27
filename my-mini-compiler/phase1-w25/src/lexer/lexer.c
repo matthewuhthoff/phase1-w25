@@ -32,6 +32,15 @@ void print_error(ErrorType error, int line, const char *lexeme) {
  *  TODO Update your printing function accordingly
  */
 
+int ispunctuation(char c){
+    if (c == '{' || c == '}' || c == ',' || c == '(' || c == ')' || c == ';'){
+        return 1;
+    }
+    else{
+        return 0;
+    };
+}
+
 void print_token(Token token) {
     if (token.error != ERROR_NONE) {
         print_error(token.error, token.line, token.lexeme);
@@ -48,6 +57,9 @@ void print_token(Token token) {
             break;
         case TOKEN_EOF:
             printf("EOF");
+            break;
+        case TOKEN_PUNCTUATION:
+            printf("PUCTUATION");
             break;
         default:
             printf("UNKNOWN");
@@ -103,10 +115,6 @@ Token get_next_token(const char *input, int *pos) {
         if (last_token_type == 'o') {
             // Check for consecutive operators
             token.error = ERROR_CONSECUTIVE_OPERATORS;
-            token.lexeme[0] = c;
-            token.lexeme[1] = '\0';
-            (*pos)++;
-            return token;
         }
         token.type = TOKEN_OPERATOR;
         token.lexeme[0] = c;
@@ -117,6 +125,14 @@ Token get_next_token(const char *input, int *pos) {
     }
 
     // TODO: Add delimiter handling here
+    // Handle punctuation
+    if(ispunctuation(c)){
+        token.type = TOKEN_PUNCTUATION;
+        token.lexeme[0] = c;
+        token.lexeme[1] = '\0';
+        (*pos)++;
+        return token;
+    }
 
     // Handle invalid characters
     token.error = ERROR_INVALID_CHAR;
