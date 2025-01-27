@@ -18,6 +18,7 @@ typedef enum {
     TOKEN_EOF,
     TOKEN_NUMBER,     // e.g., "123", "456"
     TOKEN_OPERATOR,   // e.g., "+", "-"
+    TOKEN_PUNCTUATION,   // e.g., "{", "}", ",", ".", "(", ")"
     TOKEN_ERROR
 } TokenType;
 
