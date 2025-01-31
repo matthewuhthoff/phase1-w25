@@ -5,7 +5,7 @@
 /* tokens.h */
 #ifndef TOKENS_H
 #define TOKENS_H
-#define TOKEN_COUNT 9
+#define TOKEN_COUNT 8  // 8 tokens we're using
 /* Token types that need to be recognized by the lexer
  * TODO: Add more token types as per requirements:
  * - Keywords or reserved words (if, repeat, until)

@@ -26,6 +26,7 @@ void print_error(ErrorType error, int line, const char *lexeme) {
             printf("Unknown error\n");
     }
 }
+
 void print_token(Token token) {
     printf("Token: ");
     switch (token.type) {
@@ -68,8 +69,8 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    char *input_buffer;
-    long file_size;
+    char *file_buffer;
+    size_t file_size;
     FILE *fp;
 
     fp = fopen(argv[1], "r");
@@ -82,30 +83,39 @@ int main(int argc, char* argv[]) {
     file_size = ftell(fp);
     rewind(fp);
 
-    input_buffer = (char *)malloc(file_size * sizeof(char) + 1);
-    size_t bytes_read = fread(input_buffer, 1, file_size, fp);
+    file_buffer = (char *)malloc(file_size + 1);
+    if (!file_buffer) {
+        fprintf(stderr, "file is null\n");
+        free(file_buffer);
+        fclose(fp);
+        return 1;
+    }
+    memset(file_buffer, 0, file_size + 1);  // initialize file_buffer to null
+    size_t bytes_read = fread(file_buffer, 1, file_size, fp);
 
     if (bytes_read != file_size) {
         fprintf(stderr, "Could not read the whole file\n");
-        free(input_buffer);
+        fclose(fp);
+        free(file_buffer);
         return 1;
     }
     fclose(fp);
 
-    printf("Analyzing input:\n%s\n\n", input_buffer);
+    printf("Analyzing input:\n%s\n\n", file_buffer);
     
     regex_t regex[TOKEN_COUNT];
     regmatch_t pmatch[TOKEN_COUNT][1];
 
     bool matches[TOKEN_COUNT] = { false };
     bool match, any_match;
-    Token cur_token;
+    Token cur_token = {TOKEN_NONE, "", current_line, ERROR_NONE};
     TokenType cur_match;
-    int* cur_longest;
+    int cur_longest;
     size_t cur_position = 0;
     
+    char* input_buffer = file_buffer;
+
     compile_patterns(regex);
-    
     do {
         any_match = false;
         for (int i = 0; i < TOKEN_COUNT; ++i) {
@@ -114,25 +124,24 @@ int main(int argc, char* argv[]) {
             any_match |= match;
         }
         if (any_match) {
-            cur_match = get_longest_match(pmatch, matches, cur_longest);
+            cur_match = get_longest_match(pmatch, matches, &cur_longest);
             if (cur_match == TOKEN_NEWLINE) {  // really don't like doing this here
                 ++current_line;
             }
             cur_token.type = cur_match;
             cur_token.line = current_line;
             cur_token.error = ERROR_NONE;
-            memcpy(cur_token.lexeme, input_buffer, *cur_longest);  // huge bug if identifier is longer than 100 chars
+            memcpy(cur_token.lexeme, input_buffer, cur_longest);  // huge bug if identifier is longer than 100 chars
 
             print_token(cur_token);
 
-            input_buffer += *cur_longest;
-            cur_position += *cur_longest;
+            input_buffer += cur_longest;
+            cur_position += cur_longest;
         } else {
             fprintf(stderr, "Could not match any token here: %d\n", *input_buffer);
             input_buffer += 1;  // increment ptr and try again
             cur_position += 1;
         }
-
         memset(matches, 0, sizeof(matches));  // reset matches;
         cur_token.type = TOKEN_NONE;  // reset current token
         memset(cur_token.lexeme, 0, 100);
@@ -140,5 +149,6 @@ int main(int argc, char* argv[]) {
     } while(cur_position <= file_size - 1);  // -1 for EOF char
 
     free_patterns(regex);
+    free(file_buffer);
     return 0;
 }
