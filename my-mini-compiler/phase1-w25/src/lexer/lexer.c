@@ -125,15 +125,21 @@ int main(int argc, char* argv[]) {
         }
         if (any_match) {
             cur_match = get_longest_match(pmatch, matches, &cur_longest);
-            if (cur_match == TOKEN_NEWLINE) {  // really don't like doing this here
-                ++current_line;
-            }
             cur_token.type = cur_match;
             cur_token.line = current_line;
             cur_token.error = ERROR_NONE;
-            memcpy(cur_token.lexeme, input_buffer, cur_longest);  // huge bug if identifier is longer than 100 chars
+            if (cur_longest < 100) {
+                memcpy(cur_token.lexeme,
+                       input_buffer,
+                       cur_longest);  // huge bug if identifier is longer than 100 chars
 
-            print_token(cur_token);
+                print_token(cur_token);
+            } else {
+                fprintf(stderr, "Token cannot be longer than 99 chars\n");
+            }
+            if (cur_match == TOKEN_NEWLINE) {  // really don't like doing this here
+                ++current_line;
+            }
 
             input_buffer += cur_longest;
             cur_position += cur_longest;

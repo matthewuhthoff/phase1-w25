@@ -8,7 +8,8 @@ set(CMAKE_C_STANDARD 11)
 # Add include directory (this will be needed to add your tokens to your lexer)
 include_directories(${PROJECT_SOURCE_DIR}/phase1-w25/include)
 
-set(CMAKE_C_FLAGS "-g -Werror -Wall -Wextra -Wpedantic") # strict build flags
+add_compile_options(-Werror -Wall -Wextra -Wpedantic)
+
 
 # Add executables when needed: Make sure you specify the path to your .c or .h file
 add_executable(my-mini-compiler
