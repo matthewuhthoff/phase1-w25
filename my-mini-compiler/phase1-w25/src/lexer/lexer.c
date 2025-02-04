@@ -74,12 +74,40 @@ Token get_next_token(const char *input, int *pos) {
     char c;
 
     // Skip whitespace and track line numbers
-    while ((c = input[*pos]) != '\0' && (c == ' ' || c == '\n' || c == '\t')) {
-        if (c == '\n') {
-            current_line++;
+    while ((c = input[*pos]) != '\0') 
+    {
+        if((c == ' ' || c == '\n' || c == '\t'))
+        {
+            if (c == '\n') {
+                current_line++;
+            }
+            (*pos)++;
         }
-        (*pos)++;
+        else if (c == '/' && input[*pos + 1] == '/') {
+            (*pos) += 2;
+            while (input[*pos] != '\0' && input[*pos] != '\n') {
+                (*pos)++;
+            }
+        }
+        else if (c == '/' && input[*pos + 1] == '*'){
+            (*pos) += 2;
+            while(input[*pos] != '\0')
+            {
+                if(input[*pos] == '\n') {
+                    current_line++;
+                }
+                else if(input[*pos] =='*' && input[*pos +1] == '/')
+                {
+                    (*pos) += 2;
+                    break;
+                }
+                (*pos)++;
+            }
+        }
+        else break;
     }
+    // Update current line in token output
+    token.line = current_line;
 
     if (input[*pos] == '\0') {
         token.type = TOKEN_EOF;
