@@ -1,3 +1,0 @@
-C:/Users/Youssef/CLionProjects/my-mini-compiler/cmake-build-debug/CMakeFiles/my-mini-compiler.dir
-C:/Users/Youssef/CLionProjects/my-mini-compiler/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Youssef/CLionProjects/my-mini-compiler/cmake-build-debug/CMakeFiles/rebuild_cache.dir
