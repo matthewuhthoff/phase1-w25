@@ -125,7 +125,8 @@ int main(int argc, char* argv[]) {
                 print_lexical_error(ERROR_OVERSIZED_TOKEN, current_line,  cur_token.lexeme);
                 memcpy(cur_token.lexeme,
                        input_buffer,
-                       MAX_TOKEN_SIZE-1); // Problematic but sorta fixes this?
+                       MAX_TOKEN_SIZE-1);
+                print_token(cur_token); // Problematic but sorta fixes this?
             }
             if (cur_match == TOKEN_NEWLINE) {  // really don't like doing this here
                 ++current_line;
