@@ -14,5 +14,6 @@ add_compile_options(-Werror -Wall -Wextra -Wpedantic)
 # Add executables when needed: Make sure you specify the path to your .c or .h file
 add_executable(my-mini-compiler
         phase1-w25/src/lexer/lexer.c
-        phase1-w25/src/regex/custom_regex.c)
+        phase1-w25/src/regex/custom_regex.c
+        phase1-w25/src/helpers/errors.c)
         
