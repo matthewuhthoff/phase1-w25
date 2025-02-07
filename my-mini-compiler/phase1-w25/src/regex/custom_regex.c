@@ -7,13 +7,13 @@
 const char *patterns[TOKEN_COUNT] = {
     "^if|^repeat|^until",              // Keywords
     "^[a-zA-Z_][a-zA-Z0-9_]*",       // Identifiers
-    "^\"([^\"\\\\]|^\\\\.)*\"",       // String literals
-    "^==|^!=|^<=|^>=|^&&|^\\|^\\||^\\+|^\\-|^\\*|^\\/|^=|^<|^>|^!", // Operators
+    "^\"([^\"\\\\]|\\\\[\\s\\S])*\"",  // string literals
+    // "^(==|!=|<=|>=|&&|\\|\\||\\+|\\-|\\*|\\/|=|<|>|!)(?!(=|+|!|<|>|&|-|*))", // Operators
+    "^(==|!=|<=|>=|&&|[\\/\\*\\!=<>+-])",
     "^[{}(),;]",                     // Punctuation
     "^[0-9]+(\\.[0-9]+)?",           // Numbers
-    "^ ",
-    "^\r\n|^\r|^\n"
-    // "\\s+|//.*|/\\*[^]*?\\*/"       // Whitespace and comments (ignored)
+    "^[ ]+", // whitespaces
+    "^\r\n|^\r|^\n" // newline
 };
 
 void compile_patterns(regex_t regexArray[]) {
