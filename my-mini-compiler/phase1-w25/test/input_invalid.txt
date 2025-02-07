@@ -1,2 +1,10 @@
-123 + 4589
-n1 + 45
+458 + 458;
+int n = 100;
+n -- 1; // Should throw a regex error
+
+"Basic string"
+/*
+Test - This should not throw an error
+*/
+"String with "quotes""
+"Unterminated string    // Error case

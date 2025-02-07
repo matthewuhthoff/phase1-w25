@@ -114,7 +114,6 @@ int main(int argc, char* argv[]) {
                 input_buffer++;
                 cur_position++;
             }
-            current_line++;
         }
         else if (input_buffer[0] == '/' && input_buffer[1] == '*')
         {
@@ -122,7 +121,7 @@ int main(int argc, char* argv[]) {
             input_buffer+=2;
             while(input_buffer[0] != '*' && input_buffer[1] != '/')
             {
-                if(input_buffer[0] != '\n') current_line++;
+                if(input_buffer[0] == '\n') current_line++;
                 input_buffer++;
                 cur_position++;
             }
