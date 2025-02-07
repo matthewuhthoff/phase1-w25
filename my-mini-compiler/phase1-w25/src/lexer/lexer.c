@@ -104,6 +104,31 @@ int main(int argc, char* argv[]) {
 
     compile_patterns(regex);
     do {
+        // Drop Whitespace
+        if(input_buffer[0] == '/' && input_buffer[1] == '/')
+        {
+            cur_position+=2;
+            input_buffer+=2;
+            while(input_buffer[0] != '\n')
+            {
+                input_buffer++;
+                cur_position++;
+            }
+            current_line++;
+        }
+        else if (input_buffer[0] == '/' && input_buffer[1] == '*')
+        {
+            cur_position+=2;
+            input_buffer+=2;
+            while(input_buffer[0] != '*' && input_buffer[1] != '/')
+            {
+                if(input_buffer[0] != '\n') current_line++;
+                input_buffer++;
+                cur_position++;
+            }
+            cur_position+=2;
+            input_buffer+=2;
+        }
         any_match = false;
         for (int i = 0; i < TOKEN_COUNT; ++i) {
             match = !regexec(&regex[i], input_buffer, 1, pmatch[i], 0);  // Invert logic on return value
